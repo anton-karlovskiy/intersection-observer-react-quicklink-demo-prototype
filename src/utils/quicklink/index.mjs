@@ -112,12 +112,12 @@ export function listen(options) {
             // ray test touch <
             if (chunks) {
               console.log('ray : ***** [utils quicklink listen] fetching chunk URLs not page URLs');
-              Object.entries(chunks).forEach(([route, urls]) => {
-                const isMatch = regexparam(route).pattern.test(entry.pathname);
+              Object.entries(chunks).forEach(([routeURL, assetURLs]) => {
+                const isMatch = regexparam(routeURL).pattern.test(entry.pathname);
                 if (isMatch) {
-                  urls.forEach(url => {
-                    console.log('ray : ***** [utils quicklink listen] url => ', url);
-                    prefetch(`${url}`, options.priority).then(isDone).catch(err => {
+                  assetURLs.forEach(assetURL => {
+                    console.log('ray : ***** [utils quicklink listen] assetURL => ', assetURL);
+                    prefetch(`${assetURL}`, options.priority).then(isDone).catch(err => {
                       isDone(); if (options.onError) options.onError(err);
                     });
                   });

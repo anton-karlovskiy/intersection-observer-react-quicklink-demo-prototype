@@ -32,7 +32,7 @@ const withQuicklink = Component => {
 		useEffect(() => {
 			const target = document.querySelector('#route-component');
 			const options = {
-				root: null,
+				root: document.body.parentElement,
 				rootMargin: '0px'
 			};
 			const callback = entries => {

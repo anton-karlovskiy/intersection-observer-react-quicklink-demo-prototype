@@ -9,11 +9,11 @@ const listenWithRmanifest = async () => {
 
   const rmanifest = window._rmanifest_;
   let chunks = {};
-  for (const route in rmanifest) {
-    if (route !== '*' && rmanifest.hasOwnProperty(route)) {
-      const chunksForRoute = rmanifest[route];
-      const chunkURLs = chunksForRoute.map(chunkForRoute => chunkForRoute.href);
-      chunks = {...chunks, [route]: chunkURLs};
+  for (const routeURL in rmanifest) {
+    if (rmanifest.hasOwnProperty(routeURL) && routeURL !== '*') {
+      const chunksForRoute = rmanifest[routeURL];
+      const assetURLs = chunksForRoute.map(chunkForRoute => chunkForRoute.href);
+      chunks = {...chunks, [routeURL]: assetURLs};
     }
   }
   
