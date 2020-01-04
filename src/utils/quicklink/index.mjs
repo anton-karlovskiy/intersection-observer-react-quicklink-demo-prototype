@@ -14,6 +14,9 @@
  * limitations under the License.
 **/
 import throttle from 'throttles';
+// ray test touch <
+import regexparam from 'regexparam';
+// ray test touch >
 import { priority, supported } from './prefetch.mjs';
 import requestIdleCallback from './request-idle-callback.mjs';
 
@@ -35,36 +38,6 @@ function isIgnored(node, filter) {
     ? filter.some(x => isIgnored(node, x))
     : (filter.test || filter).call(filter, node.href, node);
 }
-
-// ray test touch <
-// TODO: we can just use https://github.com/lukeed/regexparam
-function regexparam(str, loose) {
-	if (str instanceof RegExp) return { keys:false, pattern:str };
-	var c, o, tmp, ext, keys=[], pattern='', arr = str.split('/');
-	arr[0] || arr.shift();
-
-	while (tmp = arr.shift()) {
-		c = tmp[0];
-		if (c === '*') {
-			keys.push('wild');
-			pattern += '/(.*)';
-		} else if (c === ':') {
-			o = tmp.indexOf('?', 1);
-			ext = tmp.indexOf('.', 1);
-			keys.push( tmp.substring(1, !!~o ? o : !!~ext ? ext : tmp.length) );
-			pattern += !!~o && !~ext ? '(?:/([^/]+?))?' : '/([^/]+?)';
-			if (!!~ext) pattern += (!!~o ? '?' : '') + '\\' + tmp.substring(ext);
-		} else {
-			pattern += '/' + tmp;
-		}
-	}
-
-	return {
-		keys: keys,
-		pattern: new RegExp('^' + pattern + (loose ? '(?=$|\/)' : '\/?$'), 'i')
-	};
-}
-// ray test touch >
 
 /**
  * Prefetch an array of URLs if the user's effective
@@ -113,8 +86,8 @@ export function listen(options) {
             if (chunks) {
               console.log('ray : ***** [utils quicklink listen] fetching chunk URLs not page URLs');
               Object.entries(chunks).forEach(([routeURL, assetURLs]) => {
-                const isMatch = regexparam(routeURL).pattern.test(entry.pathname);
-                if (isMatch) {
+                const isMatched = regexparam(routeURL).pattern.test(entry.pathname);
+                if (isMatched) {
                   assetURLs.forEach(assetURL => {
                     console.log('ray : ***** [utils quicklink listen] assetURL => ', assetURL);
                     prefetch(`${assetURL}`, options.priority).then(isDone).catch(err => {
