@@ -90,7 +90,7 @@ export function listen(options) {
                 if (isMatched) {
                   assetURLs.forEach(assetURL => {
                     console.log('ray : ***** [utils quicklink listen] assetURL => ', assetURL);
-                    prefetch(`${assetURL}`, options.priority).then(isDone).catch(err => {
+                    prefetch(assetURL, options.priority).then(isDone).catch(err => {
                       isDone(); if (options.onError) options.onError(err);
                     });
                   });

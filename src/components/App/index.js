@@ -19,7 +19,9 @@ import { Route } from 'react-router-dom';
 
 import Footer from '@components/Footer';
 import Hero from '@components/Hero';
-import { listenWithRmanifest } from '../../utils';
+// ray test touch <
+import { listenWithRmanifest, useIntersect } from '../../utils';
+// ray test touch >
 import style from './index.module.css';
 
 const Home = lazy(() => import(/* webpackChunkName: "home" */ '@pages/Home'));
@@ -29,28 +31,41 @@ const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
 const withQuicklink = Component => {
 	return () => {
+		// ray test touch <
+		// useEffect(() => {
+		// 	const target = document.querySelector('#route-component');
+		// 	const options = {
+		// 		root: document.body.parentElement,
+		// 		rootMargin: '0px'
+		// 	};
+		// 	const callback = entries => {
+		// 		const intersectionRatio = entries[0].intersectionRatio;
+		// 		console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
+		// 		if (intersectionRatio > 0) {
+		// 			console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
+		// 			listenWithRmanifest();
+		// 		}
+		// 	};
+		// 	const observer = new IntersectionObserver(callback, options);
+		// 	observer.observe(target);
+		// }, []);
+		const [ref, entry] = useIntersect({root: document.body.parentElement});
+		const intersectionRatio = entry.intersectionRatio;
 		useEffect(() => {
-			const target = document.querySelector('#route-component');
-			const options = {
-				root: document.body.parentElement,
-				rootMargin: '0px'
-			};
-			const callback = entries => {
-				const intersectionRatio = entries[0].intersectionRatio;
-				console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
-				if (intersectionRatio > 0) {
-					console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
-					listenWithRmanifest();
-				}
-			};
-			const observer = new IntersectionObserver(callback, options);
-			observer.observe(target);
-		}, []);
+			console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
+			if (intersectionRatio > 0) {
+				console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
+				listenWithRmanifest();
+			}
+		}, [intersectionRatio]);
+		// ray test touch >
 		
 		return (
-			<div id='route-component'>
+			// ray test touch <
+			<div ref={ref}>
 				<Component />
 			</div>
+			// ray test touch >
 		);
 	};
 };
