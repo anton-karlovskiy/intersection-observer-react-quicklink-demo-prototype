@@ -19,23 +19,27 @@ import { Route } from 'react-router-dom';
 
 import Footer from '@components/Footer';
 import Hero from '@components/Hero';
-import { withQuicklink } from '../../utils';
 import style from './index.module.css';
+import { withQuicklink } from '../../utils';
 
 const Home = lazy(() => import(/* webpackChunkName: "home" */ '@pages/Home'));
 const About = lazy(() => import(/* webpackChunkName: "about" */ '@pages/About'));
 const Article = lazy(() => import(/* webpackChunkName: "article" */ '@pages/Article'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
+const options = {
+	routeManifestURL: '/rmanifest.json'
+};
+
 const App = () => (
 	<div className={style.app}>
 		<Hero />
 		<main className={style.wrapper}>
 			<Suspense fallback={<div>Loading...</div>}>
-				<Route path="/" exact component={withQuicklink(Home)} />
-				<Route path="/blog" exact component={withQuicklink(Blog)} />
-				<Route path="/blog/:title" component={withQuicklink(Article)} />
-				<Route path="/about" exact component={withQuicklink(About)} />
+				<Route path="/" exact component={withQuicklink(Home, options)} />
+				<Route path="/blog" exact component={withQuicklink(Blog, options)} />
+				<Route path="/blog/:title" component={withQuicklink(Article, options)} />
+				<Route path="/about" exact component={withQuicklink(About, options)} />
 			</Suspense>
 		</main>
 		<Footer />

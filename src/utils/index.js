@@ -2,26 +2,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { listen } from './quicklink/index.mjs';
 
-const ROUTE_MANIFEST_PATH = '/rmanifest.json';
+const listenWithChunks = async options => {
+  const { routeManifestURL, ...restOptions } = options;
+  
+  if (!window._chunks_) {
+    try {
+      const response = await fetch(routeManifestURL);
+      const rmanifest = await response.json();
 
-const listenWithChunks = async () => {
-  if (!window._rmanifest_) {
-    const response = await fetch(ROUTE_MANIFEST_PATH);
-    window._rmanifest_ = await response.json();
-  }
-
-  const rmanifest = window._rmanifest_;
-  let chunks = {};
-  for (const routeURL in rmanifest) {
-    if (rmanifest.hasOwnProperty(routeURL) && routeURL !== '*') {
-      const chunksForRoute = rmanifest[routeURL];
-      const assetURLs = chunksForRoute.map(chunkForRoute => chunkForRoute.href);
-      chunks = {...chunks, [routeURL]: assetURLs};
+      window._chunks_ = {};
+      for (const routeURL in rmanifest) {
+        if (rmanifest.hasOwnProperty(routeURL) && routeURL !== '*') {
+          const chunksForRoute = rmanifest[routeURL];
+          const assetURLs = chunksForRoute.map(chunkForRoute => chunkForRoute.href);
+          window._chunks_ = {...window._chunks_, [routeURL]: assetURLs};
+        }
+      }
+    } catch (error) {
+      console.log('[listenWithChunks] error => ', error);
+      return;
     }
   }
+  const chunks = window._chunks_;
   
   console.log('ray : ***** chunks => ', chunks);
-  listen({chunks});
+  listen({chunks, ...restOptions});
 };
 
 const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
@@ -52,7 +57,7 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
   return [setNode, entry];
 };
 
-const withQuicklink = Component => {
+const withQuicklink = (Component, options) => {
 	return () => {
 		const [ref, entry] = useIntersect({root: document.body.parentElement});
     const intersectionRatio = entry.intersectionRatio;
@@ -60,8 +65,8 @@ const withQuicklink = Component => {
 		useEffect(() => {
 			console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
 			if (intersectionRatio > 0) {
-				console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
-				listenWithChunks();
+        console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
+        listenWithChunks(options);
 			}
 		}, [intersectionRatio]);
 		
