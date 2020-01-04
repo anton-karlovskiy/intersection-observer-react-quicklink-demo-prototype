@@ -14,38 +14,18 @@
  * limitations under the License.
  */
 
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route } from 'react-router-dom';
 
 import Footer from '@components/Footer';
 import Hero from '@components/Hero';
-import { listenWithRmanifest, useIntersect } from '../../utils';
+import { withQuicklink } from '../../utils';
 import style from './index.module.css';
 
 const Home = lazy(() => import(/* webpackChunkName: "home" */ '@pages/Home'));
 const About = lazy(() => import(/* webpackChunkName: "about" */ '@pages/About'));
 const Article = lazy(() => import(/* webpackChunkName: "article" */ '@pages/Article'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
-
-const withQuicklink = Component => {
-	return () => {
-		const [ref, entry] = useIntersect({root: document.body.parentElement});
-		const intersectionRatio = entry.intersectionRatio;
-		useEffect(() => {
-			console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
-			if (intersectionRatio > 0) {
-				console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
-				listenWithRmanifest();
-			}
-		}, [intersectionRatio]);
-		
-		return (
-			<div ref={ref}>
-				<Component />
-			</div>
-		);
-	};
-};
 
 const App = () => (
 	<div className={style.app}>
