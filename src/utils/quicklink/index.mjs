@@ -15,7 +15,7 @@
 **/
 import throttle from 'throttles';
 // ray test touch <
-import regexparam from 'regexparam';
+import rmanifest from 'route-manifest/dist/rmanifest.mjs';
 // ray test touch >
 import { priority, supported } from './prefetch.mjs';
 import requestIdleCallback from './request-idle-callback.mjs';
@@ -66,36 +66,47 @@ export function listen(options) {
   // ray test touch <
   // const allowed = options.origins || [location.hostname];
   const allowed = options.origins || [window.location.hostname];
-  const chunks = options.chunks;
   // ray test touch >
   const ignores = options.ignores || [];
 
   const timeoutFn = options.timeoutFn || requestIdleCallback;
 
+  // ray test touch <
+  const prefetchChunks = async url => {
+    try {
+      if (!window._rmanifest_) {
+        const response = await fetch(options.routeManifestURL);
+        const routeManifest = await response.json();
+        // attach route manifest to global
+        window._rmanifest_ = routeManifest;
+      }
+
+      const entry = rmanifest(window._rmanifest_, url);
+      const chunkURLs = entry.files.map(file => file.href);
+      if (chunkURLs.length) {
+        console.log('[prefetchChunks] chunkURLs => ', chunkURLs);
+        prefetch(chunkURLs, options.priority).then(isDone).catch(err => {
+          isDone(); if (options.onError) options.onError(err);
+        });
+      }
+    } catch (error) {
+      console.log('[prefetchChunks] error => ', error);
+      return;
+    }
+  };
+  // ray test touch >
+
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         observer.unobserve(entry = entry.target);
-        // ray test touch <
-        console.log('ray : ***** [utils quicklink listen] entry.pathname => ', entry.pathname);
-        // ray test touch >
         // Do not prefetch if will match/exceed limit
         if (toPrefetch.size < limit) {
           toAdd(() => {
             // ray test touch <
-            if (chunks) {
+            if (options.routeManifestURL) {
               console.log('ray : ***** [utils quicklink listen] fetching chunk URLs not page URLs');
-              Object.entries(chunks).forEach(([routeURL, assetURLs]) => {
-                const isMatched = regexparam(routeURL).pattern.test(entry.pathname);
-                if (isMatched) {
-                  assetURLs.forEach(assetURL => {
-                    console.log('ray : ***** [utils quicklink listen] assetURL => ', assetURL);
-                    prefetch(assetURL, options.priority).then(isDone).catch(err => {
-                      isDone(); if (options.onError) options.onError(err);
-                    });
-                  });
-                }
-              });
+              prefetchChunks(entry.pathname);
             } else {
               console.log('ray : ***** [utils quicklink listen] fetching page URLs not chunk URLs');
               prefetch(entry.href, options.priority).then(isDone).catch(err => {
@@ -148,7 +159,6 @@ export function prefetch(url, isPriority, conn) {
   // Dev must supply own catch()
   return Promise.all(
     [].concat(url).map(str => {
-      // ray test touch <
       if (!toPrefetch.has(str)) {
         // Add it now, regardless of its success
         // ~> so that we don't repeat broken links
@@ -160,10 +170,7 @@ export function prefetch(url, isPriority, conn) {
           new URL(str, window.location.href).toString()
           // ray test touch >
         );
-      } else {
-        console.log('ray : ***** [utils quicklink prefetch] already prefetched str => ', str);
       }
-      // ray test touch >
     })
   );
 }
