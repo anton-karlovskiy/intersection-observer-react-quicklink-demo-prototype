@@ -34,7 +34,7 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
 const withQuicklink = (Component, options) => {
   if (!options.prefetch) return Component; // TODO: just for debugging so remove for production
 
-	return () => {
+  return props => {
 		const [ref, entry] = useIntersect({root: document.body.parentElement});
     const intersectionRatio = entry.intersectionRatio;
     
@@ -48,7 +48,7 @@ const withQuicklink = (Component, options) => {
 		
 		return (
 			<div ref={ref}>
-				<Component />
+        <Component {...props} />
 			</div>
 		);
 	};
