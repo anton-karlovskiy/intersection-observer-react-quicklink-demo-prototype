@@ -31,7 +31,8 @@ const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
 // ray test touch <
 const options = {
-	routeManifestURL: '/rmanifest.json'
+	routeManifestURL: '/rmanifest.json',
+	prefetch: false // TODO: just for debugging so remove for production
 };
 // ray test touch >
 
