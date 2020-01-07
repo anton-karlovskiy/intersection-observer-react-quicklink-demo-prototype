@@ -1,7 +1,7 @@
 
 // ray test touch <
 import React, { useEffect, useRef, useState } from 'react';
-import { listen } from './quicklink/index.mjs';
+import { listen } from 'quicklink';
 
 const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
   const [entry, updateEntry] = useState({});
