@@ -21,7 +21,7 @@ import Footer from '@components/Footer';
 import Hero from '@components/Hero';
 import style from './index.module.css';
 // ray test touch <
-import { withQuicklink } from '../../utils';
+import { withQuicklink } from '../../lib/quicklink';
 // ray test touch >
 
 const Home = lazy(() => import(/* webpackChunkName: "home" */ '@pages/Home'));
