@@ -11,23 +11,23 @@ npm start
 
 ## How to setup
 
-1. Install [webpack-route-manifest](https://github.com/lukeed/webpack-route-manifest) package
+1. Install [webpack-route-manifest](https://github.com/lukeed/webpack-route-manifest) package.
 
-2. Configure webpack with `webpack-route-manifest`  
+2. Configure webpack with `webpack-route-manifest`.
 
     * [intersection-observer-react-quicklink-demo](https://glitch.com/~anton-karlovskiy-intersection-observer-react-quicklink-demo) project example  
     https://glitch.com/edit/#!/anton-karlovskiy-intersection-observer-react-quicklink-demo?path=config/webpack.config.js:671:6
     https://glitch.com/edit/#!/anton-karlovskiy-intersection-observer-react-quicklink-demo?path=src/components/App/index.js:27:0
     https://glitch.com/edit/#!/anton-karlovskiy-intersection-observer-react-quicklink-demo?path=config/webpack.config.js:316:16
 
-    * [cra-hover-prefetch project](https://github.com/anton-karlovskiy/cra-hover-prefetch) example  
+    * [cra-hover-prefetch](https://github.com/anton-karlovskiy/cra-hover-prefetch) project example  
     https://github.com/anton-karlovskiy/cra-hover-prefetch/blob/5744672055016b93a0eeb572b8163d3f833b9400/config/webpack.config.js#L660
     https://github.com/anton-karlovskiy/cra-hover-prefetch/blob/708d713a2e874a8b1120867980116b8df9d3cea5/src/App.js#L8
 
-3. Install [quicklink](https://github.com/GoogleChromeLabs/quicklink) package  
-Currently it's not available because the new chunks feature is in [PR](https://github.com/GoogleChromeLabs/quicklink/pull/156) and not published yet. So please install this [version](https://github.com/anton-karlovskiy/quicklink/tree/feature/with-react) in your react project using `npm link/yarn link`.
+3. Install [quicklink](https://github.com/GoogleChromeLabs/quicklink) package.
+Currently it's not available because the new chunks feature is still in the [PR](https://github.com/GoogleChromeLabs/quicklink/pull/156) and not published yet. So please install this [version](https://github.com/anton-karlovskiy/quicklink/tree/feature/with-react) in your react project using `npm link/yarn link`.
 
-4. Put `withQuicklink` HOC in your project like [here](https://glitch.com/edit/#!/anton-karlovskiy-intersection-observer-react-quicklink-demo?path=src/lib/quicklink.js:57:2)  
+4. Put `withQuicklink` HOC in your project like [here](https://glitch.com/edit/#!/anton-karlovskiy-intersection-observer-react-quicklink-demo?path=src/lib/quicklink.js:57:2).
 
   ```js
   import React, { useEffect, useRef, useState } from 'react';
@@ -91,7 +91,7 @@ Currently it's not available because the new chunks feature is in [PR](https://g
   import { withQuicklink } from '../../lib/quicklink';
 
   const options = {
-    routeManifestURL: '/rmanifest.json' // the path to route manifest file by webpack-route-manifest
+    routeManifestURL: '/rmanifest.json' // path to the route manifest file by webpack-route-manifest
   };
 
   <Suspense fallback={<div>Loading...</div>}>
