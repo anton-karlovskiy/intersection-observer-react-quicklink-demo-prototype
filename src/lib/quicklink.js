@@ -51,9 +51,7 @@ const withQuicklink = (Component, options) => {
     const intersectionRatio = entry.intersectionRatio;
     
 		useEffect(() => {
-			console.log('ray : ***** [App withQuicklink callback] intersectionRatio => ', intersectionRatio);
 			if (intersectionRatio > 0) {
-        console.log('ray : ***** [App withQuicklink callback] we call quicklink as intersectionRatio is ', intersectionRatio, ', which is greater than zero');
         listen(options);
 			}
 		}, [intersectionRatio]);
