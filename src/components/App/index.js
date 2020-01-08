@@ -28,7 +28,8 @@ const Article = lazy(() => import(/* webpackChunkName: "article" */ '@pages/Arti
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
 const options = {
-	routeManifestURL: '/rmanifest.json'
+	routeManifestURL: '/rmanifest.json',
+	origins: []
 };
 
 const App = () => (
