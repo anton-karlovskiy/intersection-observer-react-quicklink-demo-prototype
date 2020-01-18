@@ -16,6 +16,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { listen } from 'quicklink';
+import rmanifest from 'route-manifest';
 
 const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
   const [entry, updateEntry] = useState({});
@@ -45,16 +46,48 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
   return [setNode, entry];
 };
 
-const withQuicklink = (Component, options) => {
+const prefetchChunks = (entry, prefetchHandler) => {
+  try {
+    const chunkEntry = rmanifest(window._rmanifest_, entry.pathname);
+    const chunkURLs = chunkEntry.files.map(file => file.href);
+    if (chunkURLs.length) {
+      console.log('ray : ***** [prefetchChunks] chunkURLs => ', chunkURLs);
+      prefetchHandler(chunkURLs);
+      return;
+    }
+  } catch (error) {
+    console.log('ray : ***** [prefetchChunks] error => ', error);
+  }
+
+  console.log('ray : ***** [prefetchChunks] regular link => ', entry.href);
+  prefetchHandler(entry.href);
+};
+
+const withQuicklink = (Component, options = {}) => {
   return props => {
 		const [ref, entry] = useIntersect({root: document.body.parentElement});
     const intersectionRatio = entry.intersectionRatio;
     
 		useEffect(() => {
-			if (intersectionRatio > 0) {
-        listen(options);
-			}
-		}, [intersectionRatio]);
+      options.prefetchChunks = prefetchChunks;
+
+      const listenAfterFetchingRmanifest = async () => {
+        if (!window._rmanifest_) {
+          await fetch('/rmanifest.json')
+            .then(response => response.json())
+            .then(data => {
+              // attach route manifest to global
+              window._rmanifest_ = data;
+            });
+        }
+
+        if (intersectionRatio > 0) {
+          listen(options);
+        }
+      };
+
+      listenAfterFetchingRmanifest();
+    }, [intersectionRatio]);
 		
 		return (
 			<div ref={ref}>
