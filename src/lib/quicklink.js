@@ -48,7 +48,7 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
 
 const prefetchChunks = (entry, prefetchHandler) => {
   try {
-    const chunkEntry = rmanifest(window._rmanifest_, entry.pathname);
+    const chunkEntry = rmanifest(window.__rmanifest, entry.pathname);
     const chunkURLs = chunkEntry.files.map(file => file.href);
     if (chunkURLs.length) {
       console.log('ray : ***** [prefetchChunks] chunkURLs => ', chunkURLs);
@@ -60,6 +60,7 @@ const prefetchChunks = (entry, prefetchHandler) => {
   }
 
   console.log('ray : ***** [prefetchChunks] regular link => ', entry.href);
+  // also prefetch regular links in-viewport
   prefetchHandler(entry.href);
 };
 
@@ -71,22 +72,9 @@ const withQuicklink = (Component, options = {}) => {
 		useEffect(() => {
       options.prefetchChunks = prefetchChunks;
 
-      const listenAfterFetchingRmanifest = async () => {
-        if (!window._rmanifest_) {
-          await fetch('/rmanifest.json')
-            .then(response => response.json())
-            .then(data => {
-              // attach route manifest to global
-              window._rmanifest_ = data;
-            });
-        }
-
-        if (intersectionRatio > 0) {
-          listen(options);
-        }
-      };
-
-      listenAfterFetchingRmanifest();
+      if (intersectionRatio > 0) {
+        listen(options);
+      }
     }, [intersectionRatio]);
 		
 		return (

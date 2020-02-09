@@ -86,7 +86,7 @@
     ]
   },
   "devDependencies": {
-    "webpack-route-manifest": "^1.1.0"
+    "webpack-route-manifest": "^1.2.0"
   },
   "jest": {
     "roots": [
