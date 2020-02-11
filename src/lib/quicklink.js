@@ -51,15 +51,13 @@ const prefetchChunks = (entry, prefetchHandler) => {
     const chunkEntry = rmanifest(window.__rmanifest, entry.pathname);
     const chunkURLs = chunkEntry.files.map(file => file.href);
     if (chunkURLs.length) {
-      console.log('ray : ***** [prefetchChunks] chunkURLs => ', chunkURLs);
       prefetchHandler(chunkURLs);
       return;
     }
   } catch (error) {
-    console.log('ray : ***** [prefetchChunks] error => ', error);
+    console.log('[prefetchChunks] error => ', error);
   }
 
-  console.log('ray : ***** [prefetchChunks] regular link => ', entry.href);
   // also prefetch regular links in-viewport
   prefetchHandler(entry.href);
 };
