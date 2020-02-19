@@ -106,3 +106,6 @@ Currently it's not available because the new chunks feature is still in the [PR]
 
 * [Link to Glitch App](https://anton-karlovskiy-intersection-observer-react-quicklink-demo.glitch.me/)
 * [Link to Project on Glitch](https://glitch.com/~anton-karlovskiy-intersection-observer-react-quicklink-demo)
+
+## Build Version on Firebase
+* https://react-quicklink-demo.web.app/
