@@ -47,19 +47,16 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
 };
 
 const prefetchChunks = (entry, prefetchHandler) => {
-  try {
-    const chunkEntry = rmanifest(window.__rmanifest, entry.pathname);
-    const chunkURLs = chunkEntry.files.map(file => file.href);
-    if (chunkURLs.length) {
-      prefetchHandler(chunkURLs);
-      return;
-    }
-  } catch (error) {
-    console.log('[prefetchChunks] error => ', error);
+  const { files } = rmanifest(window.__rmanifest, entry.pathname);
+  const chunkURLs = files.map(file => file.href).filter(Boolean);
+  if (chunkURLs.length) {
+    console.log('[prefetchChunks] chunkURLs => ', chunkURLs);
+    prefetchHandler(chunkURLs);
+  } else {
+    // also prefetch regular links in-viewport
+    console.log('[prefetchChunks] regularURL => ', entry.href);
+    prefetchHandler(entry.href);
   }
-
-  // also prefetch regular links in-viewport
-  prefetchHandler(entry.href);
 };
 
 const withQuicklink = (Component, options = {}) => {
