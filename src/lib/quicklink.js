@@ -70,7 +70,7 @@ const withQuicklink = (Component, options = {}) => {
       if (intersectionRatio > 0) {
         listen(options);
       }
-    }, [intersectionRatio]);
+    }, [intersectionRatio]);    
 		
 		return (
 			<div ref={ref}>
