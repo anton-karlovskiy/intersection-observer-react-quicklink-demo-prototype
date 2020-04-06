@@ -63,6 +63,7 @@ const prefetchChunks = (entry, prefetchHandler, accessor = __defaultAccessor) =>
   }
 };
 
+// TODO: we should check rendering times, although I believe useIntersect just triggers one time of rendering.
 const withQuicklink = (Component, options = {}) => {
   return props => {
 		const [ref, entry] = useIntersect({root: document.body.parentElement});
