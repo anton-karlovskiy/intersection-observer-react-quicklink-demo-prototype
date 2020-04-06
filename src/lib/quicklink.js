@@ -46,9 +46,13 @@ const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
   return [setNode, entry];
 };
 
-const prefetchChunks = (entry, prefetchHandler) => {
+const __defaultAccessor = mix => {
+  return (mix && mix.href) || mix || '';
+};
+
+const prefetchChunks = (entry, prefetchHandler, accessor = __defaultAccessor) => {
   const { files } = rmanifest(window.__rmanifest, entry.pathname);
-  const chunkURLs = files.map(file => file.href).filter(Boolean);
+  const chunkURLs = files.map(accessor).filter(Boolean);
   if (chunkURLs.length) {
     console.log('[prefetchChunks] chunkURLs => ', chunkURLs);
     prefetchHandler(chunkURLs);
