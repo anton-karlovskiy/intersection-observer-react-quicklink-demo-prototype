@@ -18,7 +18,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { listen } from 'quicklink';
 import rmanifest from 'route-manifest';
 
-const useIntersect = ({ root = null, rootMargin, threshold = 0 }) => {
+const useIntersect = ({ root = null, rootMargin, threshold = 0 } = {}) => {
   const [entry, updateEntry] = useState({});
   const [node, setNode] = useState(null);
   const observer = useRef(null);
